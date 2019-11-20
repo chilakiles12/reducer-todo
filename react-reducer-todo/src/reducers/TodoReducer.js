@@ -1,37 +1,46 @@
-export const initialTodoState = [
-  {
-    item: 'Complete Reducer Project',
-    completed: false,
-    id: 1
-  }
-];
+export const initialTodoState = {
+  todos: [
+    {
+      item: 'Complete Reducer Project',
+      completed: false,
+      id: 1651353508
+    }
+  ]
+};
 
 export const todoReducer = (state, action) => {
   switch (action.type) {
-    case 'UPDATE_TITLE':
-      if (!action.payload) {
-        return {
-          ...state,
-          editing: !state.editing
-        };
-      } else {
-        return {
-          ...state,
-          title: action.payload,
-          editing: !state.editing
-        };
-      }
-    case 'TOGGLE_EDITING':
+    case 'ADD_TODO':
       return {
         ...state,
-        editing: !state.editing
+        todos: [
+          ...state.todos,
+          {
+            item: action.text,
+            id: Date.now(),
+            completed: false
+          }
+        ]
       };
-    case 'DELETE_TITLE':
+    case 'TOGGLE_COMPLETE':
       return {
         ...state,
-        title: '',
-        editing: !state.editing
+        todos: state.todos.map(todo =>
+          todo.id === action.id
+            ? {
+                ...todo,
+                completed: !todo.completed
+              }
+            : todo
+        )
       };
+
+    case 'CLEAR_COMPLETED':
+      return {
+        ...state,
+        todos: state.todos.filter(todo => !todo.completed)
+      };
+
     default:
       return state;
   }
